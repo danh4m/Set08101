@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<HTML lang="en">
+
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "description"
+    content = "Daniel Hamilton, choose your own adventure game, horror story.">
+    <meta name = "keywords"
+    content = "web technologies, horror story, adventure story.">
+    <link rel="icon" href="gravestone.png">
+    <title>Death by ignorance</title>
+    <link rel = "stylesheet" href = "game.css">
+    <script src="script.js"> </script>
+</head>
+
+<main>
+<body>
+    
+<header>
+    Daniel Hamilton 40434665
+    <hr/>
+</header>
+
+<section>
+    <button onclick="previous()">Previous</button>
+    <button onclick="myFunction()">Toggle dark mode</button>
+    <button onclick="fontFunction()">Change font</button>
+    <button onclick="writeRandomQuote()">Death Quote</button>
+
+    <h2>You died...<br></h2>
+    <img src="gravestone.png" alt="gravestone" style="width:25%">
+    <audio id="my_audio_control" autoplay loop controls>
+        <source src="adeathtune.wav" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    
+    <p>You chose to ignore the ominous and unusual noise. But it continued to 
+        sound. The noise gets progressively louder and louder until you can no
+        longer bear it. It feels like your head is caving in and there is an 
+        insurmountable amount of pressure on your ears. Blood starts dripping
+        out of your ears and you feel your body getting weaker. Suddenly your
+        legs give way and you are on the splintered old floorboards of the 
+        shops. On your hands and knees you look up to the light coming in 
+        through the window, it slowly fades into oblivion. You are dead. 
+        Better luck next time.
+    </p>
+    <ul>
+        <li><a href="antiqueshop.html">Play again</a></li>
+    </ul>
+</section>
+
+</body>
+</main>
+<footer> &copy; 2021 - Daniel Hamilton - All rights reserved - <script type="text/javascript">showDate();</script></footer>
+</html>
