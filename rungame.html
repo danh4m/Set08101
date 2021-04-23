@@ -141,8 +141,8 @@
         this.currentDistanceAboveGround = this.getDistanceFor(this.x);
         var rightHandSideDistance = this.getDistanceFor(this.x + this.width);
         if(this.currentDistanceAboveGround < 0 || rightHandSideDistance < 0) {
-            alert("Game over!");
             world.stop();
+            alert("Game over!");
             window.open("arcadedeath.html", "_self");
             return;
         }
