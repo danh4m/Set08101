@@ -142,8 +142,8 @@
         var rightHandSideDistance = this.getDistanceFor(this.x + this.width);
         if(this.currentDistanceAboveGround < 0 || rightHandSideDistance < 0) {
             alert("Game over!");
-            window.open("arcadedeath.html", "_self");
             world.stop();
+            window.open("arcadedeath.html", "_self");
             return;
         }
       },
