@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<HTML lang="en">
+
+<head>
+    <meta charset = "UTF-8">
+    <meta name = "description"
+    content = "Daniel Hamilton, choose your own adventure game, horror story.">
+    <meta name = "keywords"
+    content = "web technologies, horror story, adventure story.">
+    <title>Pong</title>
+    <link rel="icon" href="gravestone.png">
+    <link rel = "stylesheet" href = "game.css">
+    <script src="script.js"></script>
+</head>
+
+
+<main>
+<body>
+<header>Daniel Hamilton 40434665<hr/></header>
+<section>
+  <button onclick="previous()">Previous</button>
+  <button onclick="fontFunction()">Change font</button>
+  
+  <h2>Pong of death...</h2>
+
+  <canvas id="game" width="640" height="480" style="border:1px solid #000;"> </canvas>
+  <audio id="my_audio_control" autoplay loop controls>
+      <source src="aarcade.wav" type="audio/mpeg">
+      Your browser does not support the audio element.
+  </audio>
+
+  <p>You go to defeat the pong arcade game. Determined you begin playing
+      against the machine and it gets more and more monotonous. Suddenly the 
+      demon appears and begins playing against you. Suddenly theres no way to 
+      keep your score. You think to yourself "Okay I'll just leave it and run 
+      down the alleyway". You start to leave but find that you physically 
+      cannot. Suddenly you are paralysed, frozen in time playing pong forever.
+       You can't stop playing.<br><br> You cant keep score. You can't 
+       leave. You're as good as dead.</p>
+
+<ul>
+    <li><a href="antiqueshop.html">Play again</a></li>
+</ul>
+
+</section>
+
+  
+  <script>
+    alert("Get a score of 5 to survive! Use ARROW keys to navigate.");
+    var canvas = document.getElementById("game");
+    var ctx = canvas.getContext("2d");
+    function paddle(x, y, width, height) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.speedModifier = 0;
+      this.hasCollidedWith = function(ball) {
+        var paddleLeftWall = this.x;
+        var paddleRightWall = this.x + this.width;
+        var paddleTopWall = this.y;
+        var paddleBottomWall = this.y + this.height;
+        if(ball.x > paddleLeftWall 
+          && ball.x < paddleRightWall
+          && ball.y > paddleTopWall
+          && ball.y < paddleBottomWall) {
+          return true;
+        }
+        return false;
+      };
+      this.move = function(keyCode) {
+        var nextY = this.y;
+        if(keyCode == 40) {
+          nextY += 5;
+          this.speedModifer = 1.5;
+        } else if(keyCode == 38) {
+          nextY += -5;
+          this.speedModifier = 1.5;
+        } else {
+          this.speedModifier = 0;
+        }
+        nextY = nextY < 0 ? 0 : nextY;
+        nextY = nextY + this.height > 480 ? 480 - this.height : nextY;
+        this.y = nextY;
+      };
+    }
+    var player = new paddle (5, 200, 25, 100);
+    var ai = new paddle (610, 200, 25, 100);
+    var ball = { x: 320, y: 240, radius: 10, xSpeed: 2, ySpeed: 0,
+      reverseX: function() {
+        this.xSpeed *= -1;
+      },
+      reverseY: function() {
+        this.ySpeed *= -1;
+      },
+      reset: function () {
+        this.x = 320;
+        this.y = 240;
+        this.xSpeed = 2;
+        this.ySpeed = 0;
+      },
+      isBouncing: function() {
+        return ball.ySpeed != 0;
+      },
+      modifyXSpeedBy: function(modification) {
+        modification = this.xSpeed < 0 ? modification * -1 : modification;
+        var nextValue = this.xSpeed + modification;
+        nextValue = Math.abs(nextValue) > 9 ? 9 : nextValue;
+        this.xSpeed = nextValue;
+      },
+      modifyYSpeedBy: function(modification) {
+        modification = this.ySpeed < 0 ? modification * -1 : modification;
+        this.ySpeed += modification;
+      }
+    };
+    function tick() {
+      updateGame();
+      draw()
+      window.setTimeout("tick()", 1000/60);
+    }
+    function updateGame() {
+      ball.x += ball.xSpeed;
+      ball.y += ball.ySpeed;
+      if(ball.x < 0) {
+        score++;
+        ball.reset();
+      }
+      if(ball.x >640) {
+          ball.reset();
+      }
+
+      if(ball.y <= 0 || ball.y >= 480) {
+        ball.reverseY();
+      }
+      var collidedWithPlayer = player.hasCollidedWith(ball);
+      var collidedWithAi = ai.hasCollidedWith(ball);
+      if(collidedWithPlayer || collidedWithAi) {
+        ball.reverseX();
+        ball.modifyXSpeedBy(0.25);
+        var speedUpValue = collidedWithPlayer ? player.speedModifier : ai.speedModifier;
+        ball.modifyYSpeedBy(speedUpValue);
+      }
+      for(var keyCode in heldDown) {
+        player.move(keyCode);
+      }
+      var aiMiddle = ai.y + (ai.height / 2);
+      if(aiMiddle < ball.y) {
+        ai.move(40);
+      }
+      if(aiMiddle > ball.y) {
+        ai.move(38);
+      }
+      var score = 0;
+      function drawScore() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText("Score: "+score, 8, 20);
+        }
+        drawScore();
+
+
+
+
+
+    }
+    function draw() {
+      ctx.fillStyle = "white";
+      ctx.fillRect(0, 0, 640, 480);
+      renderPaddle(player);
+      renderPaddle(ai);
+      renderBall(ball);
+    }
+    function renderPaddle(paddle) {
+      ctx.fillStyle = "green";
+      ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    }
+    function renderBall(ball) {
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI, false);
+      ctx.fillStyle = "coral";
+      ctx.fill();
+    }
+    var heldDown = {};
+    window.addEventListener("keydown", function(keyInfo) { heldDown[event.keyCode] = true; }, false);
+    window.addEventListener("keyup", function(keyInfo) { delete heldDown[event.keyCode]; }, false);
+    tick();
+  </script>
+</body>
+</main>
+<footer> &copy; 2021 - Daniel Hamilton - All rights reserved - <script type="text/javascript">showDate();</script></footer>
+</html>
